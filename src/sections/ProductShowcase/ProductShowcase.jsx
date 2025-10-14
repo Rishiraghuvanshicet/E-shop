@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Box, Typography, IconButton } from "@mui/material";
+import { Link } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { newArrivals, bestsellers } from "../../data/homePage/Product";
@@ -129,6 +130,8 @@ const ProductShowcase = () => {
                   objectFit: "cover",
                   display: "block",
                 }}
+                component={Link}
+                to="/shop/men"
               />
             </Box>
           </Box>

@@ -1,45 +1,26 @@
 import { products } from "../../data/homePage/Product";
-import { Box, Typography } from "@mui/material";
-import ProductCards from "../../cards/suggestions/ProductCards";
+import { Box, Container } from "@mui/material";
+import ProductCards from "../../components/cards/suggestions/ProductCards";
 
 const SuggestProduct = () => {
   return (
-    <Box
-      sx={{
-        maxWidth: 1900,
-        mx: "auto",
-        mt:6
-      }}
-    >
-      {/* <Typography
-        variant="h4"
-        sx={{
-          mb: 5,
-          textAlign: "center",
-          fontWeight: 700,
-          letterSpacing: 1,
-        }}
-      >
-        Suggested Products
-      </Typography> */}
-
+    <Container sx={{ mt: 6 }}>
       <Box
         sx={{
           display: "grid",
           gridTemplateColumns: {
-            xs: "1fr",
-            sm: "repeat(2, 1fr)",
-            md: "repeat(4, 1fr)",
+            xs: "1fr",         // Mobile: 1 column
+            sm: "repeat(2, 1fr)", // Tablet: 2 columns
+            md: "repeat(4, 1fr)", // Desktop: 4 columns
           },
           gap: 3,
-          alignItems: "center",
         }}
       >
         {products.map(({ id, category, image }) => (
           <ProductCards key={id} category={category} image={image} />
         ))}
       </Box>
-    </Box>
+    </Container>
   );
 };
 

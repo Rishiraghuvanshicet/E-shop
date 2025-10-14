@@ -1,4 +1,5 @@
 import { Box, Typography, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -137,6 +138,8 @@ const HeroSection = () => {
                 py: 1,
                 "&:hover": { backgroundColor: "#e0e0e0" },
               }}
+              component={Link}
+              to="/shop/men"
             >
               Shop Men
             </Button>
@@ -152,6 +155,8 @@ const HeroSection = () => {
                 py: 1,
                 "&:hover": { backgroundColor: "#e0e0e0" },
               }}
+              component={Link}
+              to="/shop/women"
             >
               Shop Women
             </Button>
