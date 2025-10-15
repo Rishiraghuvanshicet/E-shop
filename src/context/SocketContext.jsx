@@ -11,7 +11,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const url = import.meta.env.VITE_SERVER_BASE_URL || "http://localhost:5000";
+      const url = import.meta.env.VITE_SERVER_BASE_URL || "https://e-store-backend-eydi.onrender.com";
       const s = io(url, { transports: ["websocket"], withCredentials: false });
       socketRef.current = s;
       s.on("connect", () => {

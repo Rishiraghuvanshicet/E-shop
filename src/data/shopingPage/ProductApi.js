@@ -1,8 +1,9 @@
 // src/api/productApi.js
 import axios from "axios";
 
+const SERVER_BASE = import.meta.env.VITE_SERVER_BASE_URL || "https://e-store-backend-eydi.onrender.com";
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: `${SERVER_BASE}/api`,
 });
 
 API.interceptors.request.use((config) => {

@@ -18,7 +18,7 @@ const resolveImageUrl = (raw) => {
   if (isAbsolute) return trimmed;
   if (trimmed.startsWith("/")) return trimmed;
   if (trimmed.startsWith("uploads/")) {
-    const base = import.meta.env.VITE_SERVER_BASE_URL || "http://localhost:5000";
+    const base = import.meta.env.VITE_SERVER_BASE_URL || "https://e-store-backend-eydi.onrender.com";
     return `${base}/${trimmed}`;
   }
   return trimmed;
