@@ -1,10 +1,40 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useAuth } from "./AuthContext";
 import { toast } from "react-toastify";
 
 const CartContext = createContext(null);
 
 export const CartProvider = ({ children }) => {
+  const { user, isAuthenticated } = useAuth();
   const [items, setItems] = useState([]);
+
+  // Load cart for current user from localStorage
+  useEffect(() => {
+    if (user && isAuthenticated) {
+      const key = `cart_${user.email || user.id}`;
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          setItems(JSON.parse(saved));
+        } catch (_) {
+          setItems([]);
+        }
+      } else {
+        setItems([]);
+      }
+    } else {
+      // Hide cart when logged out but do not delete stored carts
+      setItems([]);
+    }
+  }, [user, isAuthenticated]);
+
+  // Persist cart per user
+  useEffect(() => {
+    if (user && isAuthenticated) {
+      const key = `cart_${user.email || user.id}`;
+      localStorage.setItem(key, JSON.stringify(items));
+    }
+  }, [items, user, isAuthenticated]);
 
   const addToCart = (product, quantity = 1) => {
     if (!product || !product._id) return;

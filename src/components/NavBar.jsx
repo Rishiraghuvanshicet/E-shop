@@ -4,11 +4,13 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Button, IconButton, Tooltip, useMediaQuery, Badge } from "@mui/material";
+import { Button, IconButton, Tooltip, useMediaQuery, Badge, Menu, MenuItem } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
@@ -21,10 +23,21 @@ const NavBar = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { isAuthenticated, login, logout } = useAuth();
   const navigate = useNavigate();
-  const { itemCount } = useCart() || { itemCount: 0 };
+  const { itemCount, clearCart } = useCart() || { itemCount: 0, clearCart: () => {} };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => setAnchorEl(null);
+  const goto = (path) => {
+    navigate(path);
+    handleMenuClose();
+  };
   const handleLoginClick = () => {
     if (isAuthenticated) {
       logout();
+      clearCart();
       toast.info("Logged out.");
       navigate("/");
     } else {
@@ -107,43 +120,38 @@ const NavBar = () => {
             ))}
           </Box>
 
-          {/* Login/Logout Button */}
+          {/* Profile Menu + Login/Logout */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Button
+              id="account-menu-button"
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleMenuClick}
+              endIcon={<KeyboardArrowDownIcon />}
+              sx={{ textTransform: "none", color: "#1976d2" }}
+            >
+              Menu
+            </Button>
+            <Menu
+              id="account-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleMenuClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <MenuItem onClick={() => goto("/friends")} disabled={!isAuthenticated}>Friends</MenuItem>
+              <MenuItem onClick={() => goto("/profile")} disabled={!isAuthenticated}>Profile</MenuItem>
+              <MenuItem onClick={handleLoginClick}>{isAuthenticated ? "Logout" : "Login"}</MenuItem>
+            </Menu>
             <Tooltip title="Cart">
               <IconButton component={Link} to="/cart" sx={{ color: "#1976d2" }}>
-                <Badge color="primary" badgeContent={itemCount} overlap="circular">
+                <Badge color="primary" badgeContent={isAuthenticated ? itemCount : 0} overlap="circular">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
             </Tooltip>
-            {isMobile ? (
-              <Tooltip title={isAuthenticated ? "Logout" : "Login"}>
-                <IconButton
-                  sx={{ color: "#1976d2" }}
-                  onClick={handleLoginClick}
-                >
-                  <LoginIcon />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              <Button
-                sx={{
-                  border: "1px solid #1976d2",
-                  color: "#1976d2",
-                  borderRadius: "20px",
-                  px: 2,
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "#1976d2",
-                    color: "#fff",
-                  },
-                }}
-                startIcon={<LoginIcon />}
-                onClick={handleLoginClick}
-              >
-                {isAuthenticated ? "Logout" : "Login"}
-              </Button>
-            )}
           </Box>
         </Toolbar>
       </AppBar>

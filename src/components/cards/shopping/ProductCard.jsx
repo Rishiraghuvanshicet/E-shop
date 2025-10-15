@@ -9,9 +9,25 @@ import {
   Box,
 } from "@mui/material";
 import { useCart } from "../../../context/CartContext";
+import { useNavigate } from "react-router-dom";
+
+const resolveImageUrl = (raw) => {
+  if (!raw || typeof raw !== "string") return "";
+  const trimmed = raw.trim();
+  const isAbsolute = /^https?:\/\//i.test(trimmed);
+  if (isAbsolute) return trimmed;
+  if (trimmed.startsWith("/")) return trimmed;
+  if (trimmed.startsWith("uploads/")) {
+    const base = import.meta.env.VITE_SERVER_BASE_URL || "http://localhost:5000";
+    return `${base}/${trimmed}`;
+  }
+  return trimmed;
+};
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
+  const imgSrc = resolveImageUrl(product.image);
   return (
     <Card
       sx={{
@@ -33,10 +49,20 @@ const ProductCard = ({ product }) => {
       <Box sx={{ overflow: "hidden", borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
         <CardMedia
           component="img"
-          height={{ xs: 180, sm: 200, md: 220 }}
-          image={product.image}
+          src={imgSrc || "/images/OIP.jpg"}
+          loading="lazy"
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+          onError={(e) => {
+            if (e?.currentTarget && e.currentTarget.src !== window.location.origin + "/images/OIP.jpg") {
+              e.currentTarget.src = "/images/OIP.jpg";
+            }
+          }}
           alt={product.name}
           sx={{
+            height: { xs: 180, sm: 200, md: 220 },
+            width: '100%',
+            display: 'block',
             objectFit: "cover",
             transition: "transform 0.5s",
             "&:hover": {
@@ -86,6 +112,24 @@ const ProductCard = ({ product }) => {
         onClick={() => addToCart(product, 1)}
         >
           Add to Cart
+        </Button>
+        <Button
+          size="medium"
+          variant="outlined"
+          fullWidth
+          sx={{ ml: 1, textTransform: "none" }}
+          onClick={() => navigate(`/product/${encodeURIComponent(product._id)}`)}
+        >
+          Open
+        </Button>
+        <Button
+          size="medium"
+          variant="outlined"
+          fullWidth
+          sx={{ ml: 1, textTransform: "none" }}
+          onClick={() => navigate("/friends", { state: { shareProduct: product } })}
+        >
+          Share
         </Button>
       </CardActions>
     </Card>

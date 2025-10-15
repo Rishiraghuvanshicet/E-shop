@@ -130,7 +130,7 @@ const ProductShowcase = () => {
                   objectFit: "cover",
                   display: "block",
                 }}
-                component={Link}
+                // component={Link}
                 to="/shop/men"
               />
             </Box>
