@@ -1,7 +1,18 @@
 import React from "react";
 import { Card, CardMedia, Box, Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 const ProductCards = ({ category, image }) => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const goShop = () => {
+    const isMen = /men/i.test(category);
+    const isWomen = /women/i.test(category);
+    const path = isMen ? "/shop/men" : isWomen ? "/shop/women" : "/shop/men";
+    if (isAuthenticated) navigate(path);
+    else navigate("/login");
+  };
   return (
     <Card
       sx={{
@@ -79,6 +90,7 @@ const ProductCards = ({ category, image }) => {
               color: "#000",
             },
           }}
+          onClick={goShop}
         >
           {category.includes("Men")
             ? "Shop Men"

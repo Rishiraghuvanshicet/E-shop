@@ -1,7 +1,14 @@
 import { Box, Typography, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const goShop = (category) => {
+    if (isAuthenticated) navigate(`/shop/${category}`);
+    else navigate("/login");
+  };
   return (
     <Box
       sx={{
@@ -138,8 +145,7 @@ const HeroSection = () => {
                 py: 1,
                 "&:hover": { backgroundColor: "#e0e0e0" },
               }}
-              component={Link}
-              to="/shop/men"
+              onClick={() => goShop("men")}
             >
               Shop Men
             </Button>
@@ -155,8 +161,7 @@ const HeroSection = () => {
                 py: 1,
                 "&:hover": { backgroundColor: "#e0e0e0" },
               }}
-              component={Link}
-              to="/shop/women"
+              onClick={() => goShop("women")}
             >
               Shop Women
             </Button>
