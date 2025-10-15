@@ -17,6 +17,8 @@ import { toast } from "react-toastify";
 import LoginIcon from "@mui/icons-material/Login";
 import axios from "axios";
 
+const SERVER_BASE = import.meta.env.VITE_SERVER_BASE_URL || "https://e-store-backend-eydi.onrender.com";
+
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,9 +38,8 @@ const LoginPage = () => {
         navigate("/admin");
         return;
       }
-      console.log(email,password)
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${SERVER_BASE}/api/auth/login`,
         { email, password }
       );
 
@@ -58,7 +59,7 @@ const LoginPage = () => {
     } catch (err) {
       console.error("Login Error:", err);
       const message =
-        err.response?.data?.message || "Invalid credentials. Try again.";
+        err.response?.data?.message || "Network error. Please try again.";
       toast.error(message);
     }
   };
@@ -68,9 +69,8 @@ const LoginPage = () => {
       container
       sx={{
         minHeight: "100vh",
-        alignContent: "center",
         background:
-          "linear-gradient(135deg, #1976d2 0%, #42a5f5 50%, #64b5f6 100%)",
+          "linear-gradient(135deg, #42a5f5 0%, #64b5f6 50%, #90caf9 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -127,7 +127,7 @@ const LoginPage = () => {
               color="text.secondary"
               mb={3}
             >
-              Please login to continue
+              Please sign in to continue
             </Typography>
 
             <Box component="form" onSubmit={handleSubmit}>

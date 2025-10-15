@@ -16,6 +16,8 @@ import { toast } from "react-toastify";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import axios from "axios";
 
+const SERVER_BASE = import.meta.env.VITE_SERVER_BASE_URL || "https://e-store-backend-eydi.onrender.com";
+
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -35,7 +37,7 @@ const RegisterPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { fullName, email, password, confirmPassword } = formData;
@@ -51,14 +53,13 @@ const RegisterPage = () => {
     }
 
     try {
-      const user = axios.post("http://localhost:5000/api/auth/register", {
+      await axios.post(`${SERVER_BASE}/api/auth/register`, {
         name: fullName,
         email,
         password,
       });
-      console.log(user);
     } catch (error) {
-      toast.error("Registration failed. Please try again.");
+      toast.error(error?.response?.data?.message || "Registration failed. Please try again.");
       return;
     }
     toast.success("Registered successfully! Please login.");
